@@ -40,8 +40,13 @@ namespace Core
 
             for(int i = 0; i < adjustedWords.Count;)
             {
-                sb.Append(adjustedWords[i] + " ");
-                if(adjustedWords[i].Substring(0,1).ToString() == "@")
+                if ((adjustedWords[i].Substring(0, 1).ToString() != "@" && ((atMetions.Count) + 1 != 1)) ||
+                    (adjustedWords[i]).Substring(0,1).ToString() == "@" && ((atMetions.Count + 1) > 1))
+                {
+                    sb.Append(adjustedWords[i] + " ");
+                }
+
+                if (adjustedWords[i].Substring(0,1).ToString() == "@")
                 {
                     atMetions.Add(adjustedWords[i]);
                 }
@@ -67,8 +72,6 @@ namespace Core
                 else
                 {
                     adjustedWords.Remove(adjustedWords[i]);
-
-                    i = 0;
                 }
             }
 
@@ -99,7 +102,7 @@ namespace Core
                 if (tweet != tweets[0] && tweet != tweets[totalTweets - 1])
                 {
                     sb.Replace("{continuation}", "< ");
-                    sb.Replace("{continues}", "> ");
+                    sb.Replace("{continues}", ">");
                 }
                 else if(tweet == tweets[0])
                 {

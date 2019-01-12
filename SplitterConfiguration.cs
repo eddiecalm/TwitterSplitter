@@ -17,8 +17,8 @@ namespace Core
         /// </value>
         public int MaximumTweetLength { get; set; } = 140;
 
-        /// <summary>
         /// Gets the format of a single tweet.
+        /// <summary>
         /// </summary>
         /// <remarks>
         /// The following placeholders are supported:
