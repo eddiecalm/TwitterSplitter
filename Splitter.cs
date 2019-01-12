@@ -43,13 +43,24 @@ namespace Core
                 if ((adjustedWords[i].Substring(0, 1).ToString() != "@" && ((atMetions.Count) + 1 != 1)) ||
                     (adjustedWords[i]).Substring(0,1).ToString() == "@" && ((atMetions.Count + 1) > 1))
                 {
-                    sb.Append(adjustedWords[i] + " ");
+                    if (adjustedWords[i].Contains("http"))
+                    {
+                        var url = adjustedWords[i].Substring(0,_splitterConfiguration.ShortenedUrlCharacterLength);
+
+                        sb.Append(url.ToString() + " ");
+                    }
+                    else
+                    {
+                        sb.Append(adjustedWords[i] + " ");
+                    }
                 }
 
                 if (adjustedWords[i].Substring(0,1).ToString() == "@")
                 {
                     atMetions.Add(adjustedWords[i]);
                 }
+
+                
 
                 if (sb.Length > _splitterConfiguration.MaximumTweetLength)
                 {
@@ -107,7 +118,7 @@ namespace Core
                 else if(tweet == tweets[0])
                 {
                     sb.Replace("{continuation}", "");
-                    sb.Replace("{continues}", "> ");
+                    sb.Replace("{continues}", ">");
                 }
                 else if(tweet == tweets[totalTweets - 1])
                 {
