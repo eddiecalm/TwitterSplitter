@@ -28,10 +28,6 @@ namespace Core
         /// <param name="message">The message to be split.</param>
         /// <returns>A series of tweets to be posted to Twitter, in the order in which they should be posted.</returns>
         /// <exception cref="NotImplementedException"></exception>
-        //public IEnumerable<ITweet> Split(string message)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         public IEnumerable<string> Split(string message)
         {
@@ -40,10 +36,15 @@ namespace Core
 
             List<string> words = message.Split(' ').ToList();
             List<string> adjustedWords = words;
-           
+            var atMetions = new List<string>();
+
             for(int i = 0; i < adjustedWords.Count;)
             {
                 sb.Append(adjustedWords[i] + " ");
+                if(adjustedWords[i].Substring(0,1).ToString() == "@")
+                {
+                    atMetions.Add(adjustedWords[i]);
+                }
 
                 if (sb.Length > _splitterConfiguration.MaximumTweetLength)
                 {
@@ -71,7 +72,7 @@ namespace Core
                 }
             }
 
-            var tweetsWithTotal = FormatListOfTweets(tweets);
+            var tweetsWithTotal = FormatListOfTweets(tweets, atMetions);
 
             return tweetsWithTotal;
         }  
@@ -81,13 +82,12 @@ namespace Core
             var sb = new StringBuilder(_splitterConfiguration.TweetFormat);
 
             sb.Replace("{index}", (currentTweetCount + 1).ToString());
-            sb.Replace("{mention}", "");
             sb.Replace("{message}", tweet);
 
             return sb.ToString();
         }
 
-        private List<string> FormatListOfTweets(List<string> tweets)
+        private List<string> FormatListOfTweets(List<string> tweets, List<string> atMentions)
         {
             var tweetsWIthTotal = new List<string>();
             var totalTweets = tweets.Count();
@@ -113,6 +113,22 @@ namespace Core
                 }
 
                 sb.Replace("{total}", (tweets.Count).ToString());
+
+                if (atMentions != null && atMentions.Any())
+                {
+                    var sbMentions = new StringBuilder();
+
+                    foreach (var word in atMentions)
+                    {
+                        sbMentions.Append(word + " ");
+                    }
+
+                    sb.Replace("{mention}", sbMentions.ToString());
+                }
+                else
+                {
+                    sb.Replace("{mention}", "");
+                }
 
                 tweetsWIthTotal.Add(sb.ToString());
             }

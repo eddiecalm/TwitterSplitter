@@ -19,8 +19,8 @@ namespace Core
 
             //var messageInput = args[0];
             var messageInput = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut iaculis sollicitudin porta. Aenean at semper augue, " +
-                "sed hendrerit augue. Sed eu tincidunt nunc, sed vestibulum ipsum. Vestibulum aliquet ex felis, vitae cursus odio vulputate nec. " +
-                "Nulla vitae dictum ipsum, sit amet pharetra lorem. Interdum et malesuada fames ac ante ipsum primis in faucibus.";
+                "sed hendrerit augue. Sed eu tincidunt nunc, sed vestibulum ipsum. @User1 Vestibulum aliquet ex felis, vitae cursus odio vulputate nec. " +
+                "Nulla vitae dictum ipsum, sit amet pharetra lorem. Interdum et malesuada @User2 fames ac ante ipsum primis in faucibus.";
 
             var configuration = new SplitterConfiguration();
 
