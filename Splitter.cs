@@ -49,13 +49,17 @@ namespace Core
                 {
                     var sbShortened = sb.ToString().Substring(0, sb.Length - (adjustedWords[i].Length + 1));
 
-                    tweets.Add(sbShortened);
+                    var tweetToAdd = FormatSingleTweet(sbShortened, tweets.Count);
+
+                    tweets.Add(tweetToAdd);
 
                     sb.Length = 0;
                 }
                 else if (adjustedWords.Count == 1)
                 {
-                    tweets.Add(sb.ToString());
+                    var tweetToAdd = FormatSingleTweet(sb.ToString(), tweets.Count);
+
+                    tweets.Add(tweetToAdd);
 
                     adjustedWords.Remove(adjustedWords[i]);
                 }
@@ -67,9 +71,53 @@ namespace Core
                 }
             }
 
-            return tweets;
+            var tweetsWithTotal = FormatListOfTweets(tweets);
+
+            return tweetsWithTotal;
         }  
         
-        
+        private string FormatSingleTweet(string tweet, int currentTweetCount)
+        {
+            var sb = new StringBuilder(_splitterConfiguration.TweetFormat);
+
+            sb.Replace("{index}", (currentTweetCount + 1).ToString());
+            sb.Replace("{mention}", "");
+            sb.Replace("{message}", tweet);
+
+            return sb.ToString();
+        }
+
+        private List<string> FormatListOfTweets(List<string> tweets)
+        {
+            var tweetsWIthTotal = new List<string>();
+            var totalTweets = tweets.Count();
+
+            foreach (var tweet in tweets)
+            {
+                var sb = new StringBuilder(tweet);
+
+                if (tweet != tweets[0] && tweet != tweets[totalTweets - 1])
+                {
+                    sb.Replace("{continuation}", "< ");
+                    sb.Replace("{continues}", "> ");
+                }
+                else if(tweet == tweets[0])
+                {
+                    sb.Replace("{continuation}", "");
+                    sb.Replace("{continues}", "> ");
+                }
+                else if(tweet == tweets[totalTweets - 1])
+                {
+                    sb.Replace("{continuation}", "< ");
+                    sb.Replace("{continues}", "");
+                }
+
+                sb.Replace("{total}", (tweets.Count).ToString());
+
+                tweetsWIthTotal.Add(sb.ToString());
+            }
+
+            return tweetsWIthTotal;
+        }
     }
 }
